@@ -30,10 +30,16 @@ console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin
   Aşağıdaki skor1 ve skor2 kodlarını inceleyiniz ve aşağıdaki soruları altına not alarak cevaplayın
   
   1. skor1 ve skor2 arasındaki fark nedir?
+
+  - Skor, skor1'de fonksiyonun içinde, skor2'de ise fonksiyonun dışında tanımlanmıştır. İlki local scope, ikincisi global scopetadır. 
   
   2. Hangisi bir closure kullanmaktadır? Nasıl tarif edebilirsin? (yarınki derste öğreneceksin :) )
+
+  -skor1 kodun kullanıldığı örnekte fonksiyonun içindeki fonksiyondan bilgi alındığı için burada closure kullanılmıştır.
   
   3. Hangi durumda skor1 tercih edilebilir? Hangi durumda skor2 daha mantıklıdır?
+
+  -Değişkeni sadece fonksiyonun içinde kullanacaksak skor1 şeklinde yazabiliriz. Skor değişkenini başka yerlerde de kullanabilmek için skor2 kullanılabilir.
 */
 
 // skor1 kodları
@@ -64,9 +70,11 @@ Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
 Not: Bu fonskiyon, aşağıdaki diğer görevler için de bir callback fonksiyonu olarak da kullanılacak
 */
 
-function takimSkoru(/*Kodunuzu buraya yazınız*/){
-    /*Kodunuzu buraya yazınız*/
+function takimSkoru(){
+    let skor = Math.round(Math.random() * (25-10) + 10)
+    return skor;
 }
+console.log(takimSkoru());
 
 
 
@@ -86,11 +94,23 @@ Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
 }
 */ 
 
-function macSonucu(/*Kodunuzu buraya yazınız*/){
-  /*Kodunuzu buraya yazınız*/
+function macSonucu(callback, ceyrekSayi){
+let EvSahibi = 0;
+let KonukTakim = 0;
+for (let i=0; i<ceyrekSayi; i++) {
+  EvSahibi += callback();
+  KonukTakim += callback();
+}
+const yeniObje = {
+  "EvSahibi" : EvSahibi,
+  "KonukTakim" : KonukTakim,
+
+}
+return yeniObje
+  
 }
 
-
+console.log(macSonucu(takimSkoru, 4));
 
 
 
@@ -109,11 +129,16 @@ Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
   */
 
 
-function periyotSkoru(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+function periyotSkoru(callback) {
+  let skor = { 
+    "EvSahibi" : callback(),
+    "KonukTakim" : callback(),
+
+  }
+  return skor
 
 }
-
+console.log(periyotSkoru(takimSkoru));
 
 /* Zorlayıcı Görev 5: skorTabelasi() 
 Aşağıdaki skorTabelasi() fonksiyonunu kullanarak aşağıdakileri yapınız:
@@ -146,10 +171,28 @@ MAÇ UZAR ise skorTabelasi(periyotSkoru,takimSkoru,4)
 ] */
 // NOTE: Bununla ilgili bir test yoktur. Eğer logladığınız sonuçlar yukarıdakine benziyor ise tmamlandı sayabilirsiniz.
 
-function skorTabelasi(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+function skorTabelasi(periyotSkoru, takimSkoru, ceyrekSayisi) {
+  let mac = [];
+  let topEvSahibi = 0;
+  let topKonukTakim = 0;
+  for (let i=0; i<ceyrekSayisi; i++) {
+    let sonuc = periyotSkoru(takimSkoru);
+    topEvSahibi += sonuc.EvSahibi;
+    topKonukTakim += sonuc.KonukTakim;
+    mac [i] = (i+1) + ". Periyot: Ev Sahibi " + sonuc.EvSahibi + " - Konuk Takım " + sonuc.KonukTakim
+  }
+  if(topEvSahibi == topKonukTakim) {
+    i =1;
+    let uzatma = periyotSkoru(takimSkoru);
+    topEvSahibi += uzatma.EvSahibi;
+    topKonukTakim += uzatma.KonukTakim;
+    let str = i + ". Uzatma Ev Sahibi " + uzatma.EvSahibi + " - Konuk Takım " + uzatma.KonukTakim
+    mac.push(str);
+  }
+  mac.push("Maç sonucu Ev Sahibi" + topEvSahibi + " Konuk Takım " + topKonukTakim)
+  return mac
 }
-
+console.log(skorTabelasi(periyotSkoru, takimSkoru, 4))
 
 
 
